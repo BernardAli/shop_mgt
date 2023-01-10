@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+     <div class="pagetitle">
+      <h1>History</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'list_items' %}">Cash Items</a></li>
+          <li class="breadcrumb-item active">History</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+     <section class="section dashboard">
+
+         <div class="row">
+        <div class="col-sm-2"><!--Start of first col-->
+            <form method='POST' action=''>{% csrf_token %}
+            {{form|crispy}}
+            <input type="submit" value='Search' class="btn btn-primary mybutton"/>
+        </form>
+        </div>
+        <br>
+        <div class="col-sm-10"><!--Start of second col-->
+            <div class="display_table">
+        <table class='table table-bordered table-striped datatable table-hover'>
+          <thead>
+            <tr>
+<!--              <th>COUNT</th>-->
+<!--              <th>ID</th>-->
+              <th>CATEGORY</th>
+              <th>RECIPIENT</th>
+              <th>DETAIL</th>
+              <th>RECEIVED AMOUNT</th>
+              <th>PAID AMOUNT</th>
+              <th>BALANCE</th>
+              <th>ISSUED BY</th>
+              <th>LAST UPDATED</th>
+            </tr>
+          </thead>
+        {% for instance in queryset %}
+            <tr>
+
+<!--              <td>{{forloop.counter}}</td>-->
+<!--              <td>{{instance.id}}</td>-->
+              <td>{{instance.category}}</td>
+              <td>{{instance.recipient}}</td>
+              <td>{{instance.detail}}</td>
+              <td>{{instance.amount_in}}</td>
+              <td>{{instance.amount_out}}</td>
+              <td>{{instance.balance}}</td>
+              <td>{{instance.issue_by}}</td>
+              <td>{{instance.last_updated|date:"d M, h:i a"}}</td>
+            </tr>
+        {% endfor %}
+      </table>
+    </div>
+        </div>
+    </div>
+
+    </section>
+
+{% endblock content %}

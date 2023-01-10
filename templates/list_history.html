@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+     <div class="pagetitle">
+      <h1>History</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'list_items' %}">List Items</a></li>
+          <li class="breadcrumb-item active">History</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+     <section class="section dashboard">
+
+         <div class="row">
+        <div class="col-sm-2"><!--Start of first col-->
+            <form method='POST' action=''>{% csrf_token %}
+            {{form|crispy}}
+            <input type="submit" value='Search' class="btn btn-primary mybutton"/>
+        </form>
+        </div>
+        <br>
+        <div class="col-sm-10"><!--Start of second col-->
+            <div class="display_table">
+        <table class='table table-bordered table-striped datatable table-hover text-center'>
+          <thead>
+            <tr>
+<!--              <th>COUNT</th>-->
+<!--              <th>ID</th>-->
+              <th>CATEGORY</th>
+              <th>ITEM NAME</th>
+              <th>QUANTITY IN STORE</th>
+              <th>BOUGHT QUANTITY</th>
+              <th>ISSUE QUANTITY</th>
+              <th>RECEIVE QUANTITY</th>
+              <th>ISSUE BY</th>
+              <th>RECEIVE BY</th>
+              <th>LAST UPDATED</th>
+            </tr>
+          </thead>
+        {% for instance in queryset %}
+            <tr>
+
+<!--              <td>{{forloop.counter}}</td>-->
+<!--              <td>{{instance.id}}</td>-->
+              <td>{{instance.category}}</td>
+              <td>{{instance.item_name}}</td>
+              <td style="color:blue; font-weight:bold;">{{instance.quantity}}</td>
+              <td>{{instance.sale_quantity}}</td>
+              <td>{{instance.delivery_quantity}}</td>
+              <td style="color:green; font-weight:bold;">{{instance.purchased_quantity}}</td>
+              <td>{% if instance.purchased_quantity > 0%}
+                    {{ instance.purchased_from}}
+                  {% else %}
+                    {{instance.sale_by}}
+                  {% endif %}
+              </td>
+              <td>{% if instance.sale_quantity > 0%}
+                    {{instance.sale_to}}
+                  {% else %}
+                    {{instance.purchased_by}}
+                  {% endif %}
+              </td>
+              <td>{{instance.last_updated|naturaltime}}</td>
+            </tr>
+        {% endfor %}
+      </table>
+    </div>
+        </div>
+    </div>
+
+    </section>
+
+{% endblock content %}

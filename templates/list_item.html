@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+     <div class="pagetitle">
+      <h1>List Items</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item active">List Items</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+     <section class="section dashboard">
+         <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <h5 class="card-title">List Items <span></span></h5>
+
+                  <table class="table table-borderless datatable table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">Sale Price(GHS)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in queryset%}
+                        <tr>
+                        <th scope="row"><a href="#">{{ forloop.counter }}</a></th>
+                        <td>{{item.category}}</td>
+                        <td><a href="{% url 'update_items' item.pk %}" class="text-primary">{{item.item_name}}</a></td>
+                        <td><a href="{% url 'stock_detail' item.pk %}">
+						  {% if item.quantity <= item.reorder_level %}
+						    <div class="badge bg-danger">{{item.quantity}}</div>
+						  {% else %}
+                            {{item.quantity}}
+						  {% endif %}
+						</a></td>
+                        <td>{{item.unit_sale_price}}</span></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+    </section>
+
+{% endblock content %}

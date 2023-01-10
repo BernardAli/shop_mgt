@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+     <div class="pagetitle">
+      <h1>{{queryset.item_name}}</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'list_items' %}">List Items</a></li>
+          <li class="breadcrumb-item active">{{queryset.item_name}}</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+     <section class="section dashboard">
+
+         <a href="{% url 'issue_cash' queryset.id  %}"><div class='btn btn-danger'>Issue {{queryset.item_name}}</div></a>
+         <a href="{% url 'receive_cash' queryset.id %}"><div class='btn btn-primary'>Receive {{queryset.item_name}}</div></a>
+            <br><br>
+            <div class="display_table">
+              <table class='table table-bordered table-striped'>
+                      <tr>
+                        <th>Balance</th>
+                        <th>Impriest</th>
+                        <th>LAST UPDATED</th>
+                      </tr>
+                      <tr>
+                        <td>
+                          {% if queryset.balance <= queryset.impriest_level %}
+                          <div style="background-color: orange;">{{queryset.balance}}</div>
+                          {% else %}{{queryset.balance}}
+                          {% endif %}
+                        </td>
+                          <td><a href="{% url 'impriest_level' queryset.id %}">{{queryset.impriest_level}}</a></td>
+                        <td>{{queryset.last_updated}}</td>
+                      </tr>
+              </table>
+        </div>
+
+    </section>
+
+{% endblock content %}

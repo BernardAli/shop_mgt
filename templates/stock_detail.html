@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+     <div class="pagetitle">
+      <h1>{{queryset.item_name}}</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'list_items' %}">List Items</a></li>
+          <li class="breadcrumb-item active">{{queryset.item_name}}</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+     <section class="section dashboard">
+
+         <a href="{% url 'issue_items' queryset.id %}"><div class='btn btn-danger'>Issue {{queryset.item_name}}</div></a>
+         <a href="{% url 'receive_items' queryset.id %}"><div class='btn btn-primary'>Receive {{queryset.item_name}}</div></a>
+            <br><br>
+            <div class="display_table">
+              <table class='table table-bordered table-striped'>
+                      <tr>
+                        <th>ITEM NAME</th>
+                        <th>QUANTITY IN STORE</th>
+                        <th>UNIT SALE PRICE</th>
+                        <th>LAST UPDATED</th>
+                        <th>PAID BUT IN STORE</th>
+                      </tr>
+                      <tr>
+                        <td>{{queryset.item_name}}</td>
+                        <td>
+                          {% if queryset.quantity <= queryset.reorder_level %}
+                          <div class="badge bg-danger">{{queryset.quantity}}</div>
+                          {% else %}{{queryset.quantity}}
+                          {% endif %}
+                        </td>
+                        <td>{{queryset.unit_sale_price}}</td>
+                        <td>{{queryset.last_updated}}</td>
+                          <td>{{queryset.yet_to_deliver}}</td>
+                      </tr>
+              </table>
+        </div>
+
+    </section>
+
+{% endblock content %}

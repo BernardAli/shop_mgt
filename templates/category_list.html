@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+     <div class="pagetitle">
+      <h1>Categories</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item active">Categories</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+     <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-10">
+          <div class="row">
+
+              {%for category in categories%}
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card mb-3">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{category.image.url}}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{category.name}}</h5>
+                      <p class="card-text">{{category.description}}</p>
+                        <p><a href="{% url 'category_edit' category.pk %}">Edit</a></p>
+                        <p><a href="{% url 'category_delete' category.pk %}">Delete</a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Sales Card -->
+              {% empty %}
+                   <div class="alert border-primary alert-dismissible fade show" role="alert">
+                        No Category Added Yet
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                   </div>
+                    <button type="button" class="btn btn-primary"><a href="{% url 'new_category' %}" style="color:#fff;">Add Category</a></button>
+              {% endfor %}
+
+          </div>
+        </div><!-- End Left side columns -->
+
+      </div>
+    </section>
+
+{% endblock content %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+     <div class="pagetitle">
+      <h1>Cash Book</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item active">Cash Book</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+     <section class="section dashboard">
+         <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <h5 class="card-title">List Items <span></span></h5>
+
+                  <table class="table table-borderless datatable table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Balance</th>
+                        <th scope="col">Updated At</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for instance in queryset%}
+                        <tr>
+                        <th scope="row"><a href="#">{{ forloop.counter }}</a></th>
+                        <td><a href="{% url 'cash_detail' instance.id %}">{{instance.category}}</a></td>
+                        <td>{% if instance.balance <= instance.impriest_level %}
+                              <div style="background-color: orange;">{{instance.balance}}</div>
+                              {% else %}{{instance.balance}}
+                              {% endif %}</td>
+                        <td>{{instance.last_updated|date:"d M, h:i a"}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+    </section>
+
+{% endblock content %}
