@@ -1,4 +1,5 @@
 import csv
+import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -6,6 +7,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.db.models import Count, Sum
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, CreateView
 
 from .models import Category, Stock, StockHistory, Cash, CashHistory
@@ -22,13 +24,19 @@ def index(request):
     recent_sales = StockHistory.objects.filter(sale_quantity__gt=0).order_by("-last_updated")
     recent_activities = StockHistory.objects.all().order_by("-last_updated")[:10]
     recent_cash_activities = CashHistory.objects.all().order_by("-last_updated")[:10]
+    debtors = StockHistory.objects.filter(balance__gt=0).order_by("-last_updated")
+    total_debt = StockHistory.objects.aggregate(Sum('balance'))['balance__sum']
+    receivables = StockHistory.objects.values('sale_to').annotate(dcount=Sum('balance')).filter(dcount__gt=0)
 
     context = {
         "categories_count": categories_count,
         "recent_sales": recent_sales,
         "recent_activities": recent_activities,
         "stock_count": stock_count,
-        "recent_cash_activities": recent_cash_activities
+        "recent_cash_activities": recent_cash_activities,
+        "debtors": debtors,
+        "total_debt": total_debt,
+        "receivables": receivables
     }
 
     return render(request, "home.html", context)
@@ -63,6 +71,16 @@ class CategoryDeleteView(DeleteView):
     model = Category
     template_name = 'category_delete.html'
     success_url = reverse_lazy("category_list")
+
+
+def list_receivables(request):
+    debtors = StockHistory.objects.filter(balance__gt=0).order_by("-last_updated") | \
+              StockHistory.objects.filter(balance__lt=0).order_by("-last_updated")
+    context = {
+        'debtors': debtors,
+        'now':  datetime.datetime.now().astimezone()
+    }
+    return render(request, 'list_receivables.html', context)
 
 
 @login_required
@@ -177,7 +195,9 @@ def issue_items(request, pk):
                 unit_sale_price=instance.unit_sale_price,
                 total_sale_price=instance.total_sale_price,
                 delivery_quantity=instance.delivery_quantity,
-                payment_status=instance.payment_status
+                payment_status=instance.payment_status,
+                balance=instance.balance,
+                receipt_no=instance.receipt_no,
             )
             issue_history.save()
 
@@ -265,6 +285,7 @@ def list_history(request):
             writer = csv.writer(response)
             writer.writerow(
                 ['CATEGORY',
+                 'RECEIPT NO'
                  'ITEM NAME',
                  'QUANTITY',
                  'ISSUE QUANTITY',
@@ -278,6 +299,7 @@ def list_history(request):
             for stock in instance:
                 writer.writerow(
                     [stock.category,
+                     stock.receipt_no,
                      stock.item_name,
                      stock.quantity,
                      stock.sale_quantity,

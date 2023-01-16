@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+     <div class="pagetitle">
+      <h1>History</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item active">Receivables List</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+     <section class="section dashboard">
+        <div class="card recent-sales overflow-auto">
+
+                <div class="card-body">
+                  <h5 class="card-title">Debtors</h5>
+
+                  <table class="table table-borderless table-hover datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price (GHS)</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Balance</th>
+                        <th scope="col">Days Due</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in debtors %}
+                      <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{{item.sale_to}}</td>
+                        <td>{{item.item_name}}</td>
+                        <td>{{item.unit_sale_price}}</td>
+                        <td>{{item.sale_quantity}}</td>
+                        <td>{{item.total_sale_price}}</td>
+                        <td>
+                            {% if item.balance > 0%}
+                                <span class="badge bg-warning">{{item.balance}}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{item.balance}}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ now|timeuntil:item.created_on}}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+
+                </div>
+
+     </section>
+
+{% endblock content %}

@@ -46,7 +46,7 @@ class StockUpdateForm(forms.ModelForm):
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['receipt_no', 'sale_to', 'sale_quantity', 'unit_sale_price', 'payment_status',
+        fields = ['receipt_no', 'sale_to', 'sale_quantity', 'unit_sale_price', 'payment_status', 'balance',
                   'waybill_number', 'delivery_quantity', 'phone_number']
 
 

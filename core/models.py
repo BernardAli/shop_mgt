@@ -56,6 +56,7 @@ class Stock(models.Model):
     unit_sale_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     total_sale_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     payment_status = models.CharField(max_length=50, choices=Invoice_Choice, blank=True, null=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     phone_number = models.CharField(max_length=50, blank=True, null=True)
     created_by = models.CharField(max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default='0', blank=True, null=True)
@@ -74,6 +75,7 @@ class Stock(models.Model):
 class StockHistory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True)
     item_name = models.CharField(max_length=50, blank=True, null=True)
+    receipt_no = models.CharField(max_length=50, blank=True, null=True)
     item_description = models.TextField(blank=True, null=True)
     quantity = models.IntegerField(default='0', blank=True, null=True)
     purchased_quantity = models.IntegerField(default='0', blank=True, null=True)
@@ -89,10 +91,11 @@ class StockHistory(models.Model):
     unit_sale_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     total_sale_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     payment_status = models.CharField(max_length=50, choices=Invoice_Choice, blank=True, null=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     phone_number = models.CharField(max_length=50, blank=True, null=True)
     created_by = models.CharField(max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default='0', blank=True, null=True)
-    created_on = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
     expiry = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True, blank=True, null=True)
 
