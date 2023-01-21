@@ -85,6 +85,7 @@ class StockHistory(models.Model):
     total_purchase_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     sale_quantity = models.IntegerField(default='0', blank=True, null=True)
     delivery_quantity = models.IntegerField(default='0', blank=True, null=True)
+    yet_to_deliver = models.IntegerField(default='0', blank=True, null=True)
     waybill_number = models.CharField(max_length=50, blank=True, null=True)
     sale_by = models.CharField(max_length=50, blank=True, null=True)
     sale_to = models.CharField(max_length=50, blank=True, null=True)
